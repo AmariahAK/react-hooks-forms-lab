@@ -1,49 +1,20 @@
 import React, { useState } from "react";
-import CategoryFilter from "./CategoryFilter";
-import NewTaskForm from "./NewTaskForm";
-import TaskList from "./TaskList";
-
-import { CATEGORIES, TASKS } from "../data";
+import ShoppingList from "./ShoppingList";
+import Header from "./Header";
+import itemData from "../data/items";
 
 function App() {
-  const [tasks, setTasks] = useState(TASKS); // State to hold tasks array
-  const [categoryFilter, setCategoryFilter] = useState("All"); // State to hold category filter
+  const [items, setItems] = useState(itemData);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const handleCategorySelect = (category) => {
-    setCategoryFilter(category); // Update category filter state
-  };
-
-  const handleAddTask = (newTask) => {
-    // Function to add a new task to the tasks array
-    const updatedTasks = [...tasks, { id: tasks.length + 1, ...newTask }];
-    setTasks(updatedTasks);
-  };
-
-  const handleDeleteTask = (taskId) => {
-    // Function to delete a task from the tasks array
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(updatedTasks);
-  };
-
-  // Filter tasks based on the selected category
-  const filteredTasks = categoryFilter === "All" ? tasks : tasks.filter((task) => task.category === categoryFilter);
+  function handleDarkModeClick() {
+    setIsDarkMode((isDarkMode) => !isDarkMode);
+  }
 
   return (
-    <div className="App">
-      <h2>My tasks</h2>
-      <CategoryFilter
-        categories={[...CATEGORIES, "All"]} // Pass categories including "All"
-        selectedCategory={categoryFilter}
-        onSelectCategory={handleCategorySelect}
-      />
-      <NewTaskForm
-        categories={CATEGORIES} // Pass categories for the new task form
-        onTaskFormSubmit={handleAddTask} // Update prop name to match the callback function
-      />
-      <TaskList
-        tasks={filteredTasks} // Pass filtered tasks to TaskList
-        onDeleteTask={handleDeleteTask}
-      />
+    <div className={"App " + (isDarkMode ? "dark" : "light")}>
+      <Header isDarkMode={isDarkMode} onDarkModeClick={handleDarkModeClick} />
+      <ShoppingList items={items} setItems={setItems} />
     </div>
   );
 }
